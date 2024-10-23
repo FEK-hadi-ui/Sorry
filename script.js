@@ -6,6 +6,12 @@ const yesBtn = document.querySelector(".yes-btn");
 const noBtn = document.querySelector(".no-btn");
 const messageContainer = document.querySelector(".message-button-container");
 const messageBtn = document.querySelector(".message-btn");
+const timerContainer = document.querySelector(".timer-container");
+const timeDisplay = document.getElementById("time-display");
+
+// Timer variables
+let startTime;
+let timerInterval;
 
 // Create styles for effects
 const effectStyles = `
@@ -57,6 +63,29 @@ const effectStyles = `
 `;
 
 document.head.insertAdjacentHTML('beforeend', effectStyles);
+
+// Timer function
+function updateTimer() {
+    const currentTime = new Date();
+    const timeDifference = currentTime - startTime;
+    
+    const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    
+    timeDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+// Function to start timer
+function startTimer() {
+    startTime = new Date();
+    timerContainer.style.display = "block";
+    setTimeout(() => {
+        timerContainer.classList.add("visible");
+    }, 10);
+    
+    timerInterval = setInterval(updateTimer, 1000);
+}
 
 // Firework effect function
 function createFirework(x, y) {
@@ -130,6 +159,9 @@ yesBtn.addEventListener("click", () => {
     gif.innerHTML = '<iframe src="https://giphy.com/embed/gJiwjhuYhvpUJf0YTr" width="480" height="269" style="width:100%;height:auto;" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/showtv-show-tv-ierde-aatay-ulusoy-gJiwjhuYhvpUJf0YTr">via GIPHY</a></p>';
     messageContainer.style.display = "block";
     
+    // Start the timer
+    startTimer();
+    
     // Create multiple fireworks
     const intervalId = setInterval(() => {
         createFirework(
@@ -161,130 +193,4 @@ messageBtn.addEventListener("click", () => {
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
             rainContainer.remove();
-        });
-    }
-});
-
-function showSpecialMessage() {
-    const modalContainer = document.createElement('div');
-    modalContainer.className = 'modal-container';
-    
-    const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content';
-    
-    modalContent.innerHTML = `
-        <div class="message-text" style="line-height: 1.8; margin-bottom: 25px; text-align: left;">
-            You have no idea how badly I wanted you to be here. I waited every single day. I used to cry and I couldn't tell you about it - I did not want to look miserable.
-            <br><br>
-            I checked the website, I checked my email, my number, everything. I wanted to end it all, but somehow I had hopes that you would come back and help me get back on my feet.
-            <br><br>
-            I won't make any mistakes. I will not leave. I will do everything. I will make that spark you lost come back and be brighter. Our plans, our goals to help each other be the best and independent - we will do everything. I will do everything.
-            <br><br>
-            <div style="text-align: center; margin-top: 15px; font-weight: bold; color: #e94d58;">
-                Please message me on WhatsApp:<br>
-                <a href="tel:+971567811986" style="color: #e94d58; text-decoration: none;">+971 567 811 986</a>
-            </div>
-        </div>
-        <button class="modal-close-btn">Close</button>
-    `;
-    
-    const modalStyles = `
-        <style>
-            .modal-container {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.8);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 1000;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-                padding: 20px;
-            }
-            .modal-content {
-                background: white;
-                padding: 2.5rem;
-                border-radius: 15px;
-                max-width: 600px;
-                width: 100%;
-                max-height: 90vh;
-                overflow-y: auto;
-                transform: translateY(20px);
-                transition: transform 0.3s ease;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            }
-            .modal-container.visible {
-                opacity: 1;
-            }
-            .modal-container.visible .modal-content {
-                transform: translateY(0);
-            }
-            .message-text {
-                font-size: 1.1em;
-                color: #333;
-            }
-            .modal-close-btn {
-                background: #e94d58;
-                color: white;
-                padding: 12px 30px;
-                border: none;
-                border-radius: 25px;
-                cursor: pointer;
-                font-size: 1.1em;
-                transition: all 0.3s ease;
-                margin-top: 20px;
-            }
-            .modal-close-btn:hover {
-                background: #d43d47;
-                transform: translateY(-2px);
-            }
-            @media (max-width: 600px) {
-                .modal-content {
-                    padding: 1.5rem;
-                }
-                .message-text {
-                    font-size: 1em;
-                }
-            }
-        </style>
-    `;
-    
-    document.head.insertAdjacentHTML('beforeend', modalStyles);
-    modalContainer.appendChild(modalContent);
-    document.body.appendChild(modalContainer);
-    
-    setTimeout(() => {
-        modalContainer.classList.add('visible');
-    }, 10);
-    
-    const closeBtn = modalContent.querySelector('.modal-close-btn');
-    closeBtn.addEventListener('click', () => {
-        modalContainer.classList.remove('visible');
-        setTimeout(() => {
-            modalContainer.remove();
-        }, 300);
-    });
-}
-
-// No button hover handler
-noBtn.addEventListener("mouseover", () => {
-    const noBtnRect = noBtn.getBoundingClientRect();
-    const maxX = window.innerWidth - noBtnRect.width;
-    const maxY = window.innerHeight - noBtnRect.height;
-    
-    const randomX = Math.floor(Math.random() * maxX);
-    const randomY = Math.floor(Math.random() * maxY);
-    
-    noBtn.style.left = randomX + "px";
-    noBtn.style.top = randomY + "px";
-});
-
-// Prevent default click on No button
-noBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    return false;
-});
+            if (timer
