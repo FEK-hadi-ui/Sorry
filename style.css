@@ -4,6 +4,7 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 :root {
     --primary-color: #e94d58;
     --text-dark: #333;
@@ -15,6 +16,7 @@
     --spacing-md: 15px;
     --spacing-sm: 10px;
 }
+
 body {
     display: flex;
     justify-content: center;
@@ -24,31 +26,36 @@ body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     padding: 20px;
 }
-/* Wrapper and Content /
+
+/* Wrapper and Content */
 .wrapper {
     max-width: 800px;
     width: 100%;
 }
+
 .gif {
     height: 100%;
     width: 100%;
     border-radius: 8px;
     overflow: hidden;
 }
-/ Typography /
+
+/* Typography */
 h1.question {
     text-align: center;
     font-size: 1.5em;
     color: var(--primary-color);
     margin: var(--spacing-md) 0;
 }
+
 h2.follow-up-question {
     text-align: center;
     font-size: 1.2em;
     color: var(--text-dark);
     margin: var(--spacing-sm) 0;
 }
-/ Button Styles /
+
+/* Button Styles */
 .btn-group {
     width: 100%;
     height: var(--button-height);
@@ -58,6 +65,7 @@ h2.follow-up-question {
     margin-top: var(--spacing-lg);
     position: relative;
 }
+
 button {
     width: var(--button-width);
     height: var(--button-height);
@@ -71,20 +79,24 @@ button {
     position: relative;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
 button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
 .yes-btn {
     background: var(--primary-color);
     margin-right: 10px;
 }
+
 .no-btn {
     background: var(--text-light);
     color: var(--primary-color);
     margin-left: 10px;
 }
-/ New Message Button Styles /
+
+/* New Message Button Styles */
 .message-button-container {
     text-align: center;
     margin-top: var(--spacing-lg);
@@ -92,10 +104,12 @@ button:hover {
     transform: translateY(20px);
     transition: all 0.5s ease;
 }
+
 .message-button-container.visible {
     opacity: 1;
     transform: translateY(0);
 }
+
 .message-btn {
     background: var(--primary-color);
     width: auto;
@@ -103,7 +117,8 @@ button:hover {
     padding: 0 30px;
     animation: pulse 2s infinite;
 }
-/ Animations /
+
+/* Animations */
 @keyframes pulse {
     0% {
         transform: scale(1);
@@ -118,23 +133,28 @@ button:hover {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 }
-/ Responsive Design */
+
+/* Responsive Design */
 @media (max-width: 600px) {
     :root {
         --button-width: 120px;
     }
+
     .btn-group {
         flex-direction: column;
         height: auto;
         gap: 15px;
     }
+
     .yes-btn, .no-btn {
         margin: 0;
         position: static;
     }
+
     h1.question {
         font-size: 1.3em;
     }
+
     h2.follow-up-question {
         font-size: 1.1em;
     }
