@@ -182,7 +182,7 @@ function showSpecialMessage() {
 
 You mentioned I never opened up with you, and I realize now how true that is. I was afraid that if I shared my true self, you might not like me, and I couldn’t bear the thought of losing you. But I want to change that.
 
-You said, “I’m not the girl,” but I need you to know that you are the girl—my girl. Please come back. I’m here, ready to show you just how special you are to me and how much you mean in my life.
+You said, “I’m not the girl,” but I need you to know that you are the girl. Please come back. I’m here, ready to show you just how special you are to me and how much you mean in my life.
             <br><br>
             <div style="text-align: center; margin-top: 15px; font-weight: bold; color: #e94d58;">
                 Please message me on WhatsApp:<br>
