@@ -174,11 +174,15 @@ function showSpecialMessage() {
     
     modalContent.innerHTML = `
         <div class="message-text" style="line-height: 1.8; margin-bottom: 25px; text-align: left;">
-            You have no idea how badly I wanted you to be here. I waited every single day. I used to cry and I couldn't tell you about it - I did not want to look miserable.
+            I’m not sure if I’ll be here when you come back, and I don’t know what the future holds for my surgery or if it will be successful. But if you happen to see this, please know that I am holding onto hope for the day you return.
             <br><br>
-            I checked the website, I checked my email, my number, everything. I wanted to end it all, but somehow I had hopes that you would come back and help me get back on my feet.
+            I am still looking for you, still waiting i check this website everyday and i see you everyday and and all i get are bad dreams reallyy bad  .
             <br><br>
-            I won't make any mistakes. I will not leave. I will do everything. I will make that spark you lost come back and be brighter. Our plans, our goals to help each other be the best and independent - we will do everything. I will do everything.
+            I miss you more than words can express. I promise to reignite the spark you once had and make it shine brighter than ever. You mean the world to me, and I want you to know that.
+
+You mentioned I never opened up with you, and I realize now how true that is. I was afraid that if I shared my true self, you might not like me, and I couldn’t bear the thought of losing you. But I want to change that.
+
+You said, “I’m not the girl,” but I need you to know that you are the girl—my girl. Please come back. I’m here, ready to show you just how special you are to me and how much you mean in my life.
             <br><br>
             <div style="text-align: center; margin-top: 15px; font-weight: bold; color: #e94d58;">
                 Please message me on WhatsApp:<br>
