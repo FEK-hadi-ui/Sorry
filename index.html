@@ -3,36 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A personal message page">
-    <title>hope</title>
+    <meta name="description" content="A personal reconciliation message page">
+    <title>Personal Message | Reconciliation</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preload" href="https://tenor.com/embed.js" as="script">
-    <script type="text/javascript"> (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i; y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y); })(window, document, "clarity", "script", "on1c2r1rau"); </script>
+    <script src="https://w.soundcloud.com/player/api.js"></script>
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "on1c2r1rau");
+    </script>
 </head>
 <body>
     <main class="wrapper">
         <header>
-            <h1 class="question">I really wish you were here yusra </h1>
-            <h2 class="follow-up-question">I wont be here but I am waiting for you, come back?</h2>
+            <h1 class="question">I messed up yusra :( </h1>
+            <h2 class="follow-up-question">I fucked and i really miss you ,please come back?</h2>
         </header>
         
-        <div class="tenor-gif-embed" 
-             data-postid="26563993" 
-             data-share-method="host" 
-             data-aspect-ratio="1.78771" 
-             data-width="100%"
-             loading="lazy"
-             role="img"
-             aria-label="Animated GIF">
-            <a href="https://tenor.com/view/cagatay-ulusoy-hakan-medcezir-gif-26563993">
-                Cagatay Ulusoy Hakan GIF
-            </a>
+        <div class="gif-container">
+            <iframe 
+                src="https://giphy.com/embed/OKvgO8uBDWi3Uu6ht3" 
+                width="480" 
+                height="480" 
+                frameBorder="0" 
+                class="giphy-embed" 
+                allowFullScreen
+            ></iframe>
         </div>
+
         <div class="btn-group" role="group" aria-label="Response options">
             <button class="yes-btn" type="button" aria-label="Yes">Yes</button>
             <button class="no-btn" type="button" aria-label="No">No</button>
         </div>
-        <!-- New message button (hidden by default) -->
+
         <div class="message-button-container" style="display: none;">
             <button class="message-btn" type="button" aria-label="Read special message">
                 Please click here to read the message
@@ -40,6 +45,5 @@
         </div>
     </main>
     <script src="script.js" defer></script>
-    <script src="https://tenor.com/embed.js" async></script>
 </body>
 </html>
