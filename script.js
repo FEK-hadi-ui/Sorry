@@ -1,51 +1,17 @@
-// Constants
-const CONSTANTS = {
-  COLORS: ['#e94d58', '#ff0', '#ffa500', '#ff69b4'],
-  ANIMATION_DURATION: 5000,
-  FIREWORK_INTERVAL: 300,
-  FIREWORK_COUNT: 30,
-  FLOWER_COUNT: 50,
-  HEART_COUNT: 50,
-  MESSAGES: {
-    SUCCESS: "You don't know how happy hadi will be",
-    PHONE: '+971 567 811 986'
-  },
-  EMOJIS: {
-    FLOWERS: ['🌸', '🌺', '🌹', '🌷', '💐', '🌻'],
-    HEARTS: ['❤️', '💖', '💝', '💕', '💗', '💓']
-  }
-};
+// DOM Elements
+const wrapper = document.querySelector(".wrapper");
+const question = document.querySelector(".question");
+const gif = document.querySelector(".gif-container");
+const yesBtn = document.querySelector(".yes-btn");
+const noBtn = document.querySelector(".no-btn");
+const messageContainer = document.querySelector(".message-button-container");
+const messageBtn = document.querySelector(".message-btn");
 
-// DOM Elements with error handling
-const elements = {
-  init() {
-    try {
-      this.wrapper = document.querySelector(".wrapper");
-      this.question = document.querySelector(".question");
-      this.gif = document.querySelector(".tenor-gif-embed");
-      this.yesBtn = document.querySelector(".yes-btn");
-      this.noBtn = document.querySelector(".no-btn");
-      this.messageContainer = document.querySelector(".message-button-container");
-      this.messageBtn = document.querySelector(".message-btn");
-
-      if (!this.yesBtn || !this.noBtn || !this.messageBtn) {
-        throw new Error('Required button elements not found');
-      }
-    } catch (error) {
-      console.error('Error initializing elements:', error);
-    }
-  }
-};
-
-// Effects Manager
-class EffectsManager {
-  static init() {
-    this.injectStyles();
-  }
-
-  static injectStyles() {
-    const styles = `
-      .firework {
+// Create styles for effects
+const effectStyles = `
+    <style>
+    /* Firework styles */
+    .firework {
         position: fixed;
         top: 50%;
         left: 50%;
@@ -56,220 +22,249 @@ class EffectsManager {
         border-radius: 50%;
         pointer-events: none;
         z-index: 2000;
-      }
+    }
 
-      .floating-emoji {
+    /* Flower and Heart styles */
+    .flower, .heart {
         position: fixed;
         pointer-events: none;
-        font-size: 24px;
         z-index: 1000;
-        animation: float 6s linear infinite;
-        opacity: 0;
-      }
+        animation: float 6s ease-in infinite;
+    }
 
-      @keyframes float {
+    .flower {
+        font-size: 2rem;
+    }
+
+    .heart {
+        font-size: 1.5rem;
+        color: #e94d58;
+    }
+
+    @keyframes float {
         0% {
-          transform: translateY(100vh) rotate(0deg);
-          opacity: 1;
+            transform: translate(0, 0) rotate(0deg);
+            opacity: 1;
         }
         100% {
-          transform: translateY(-100px) rotate(360deg);
-          opacity: 0;
+            transform: translate(var(--end-x), var(--end-y)) rotate(360deg);
+            opacity: 0;
         }
-      }
+    }
 
-      @keyframes sway {
-        0%, 100% { transform: translateX(0); }
-        50% { transform: translateX(30px); }
-      }
-    `;
+    @keyframes explode {
+        0% {
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(-50%, -50%) scale(30);
+            opacity: 0;
+        }
+    }
+    </style>
+`;
 
-    const styleElement = document.createElement('style');
-    styleElement.textContent = styles;
-    document.head.appendChild(styleElement);
-  }
+document.head.insertAdjacentHTML('beforeend', effectStyles);
 
-  static createFirework(x, y) {
-    Array.from({ length: CONSTANTS.FIREWORK_COUNT }).forEach(() => {
-      const firework = document.createElement('div');
-      firework.className = 'firework';
-      firework.style.cssText = `
-        left: ${x}px;
-        top: ${y}px;
-        background: ${CONSTANTS.COLORS[Math.floor(Math.random() * CONSTANTS.COLORS.length)]};
-      `;
-
-      const angle = Math.random() * Math.PI * 2;
-      const velocity = 50 + Math.random() * 50;
-      const xVelocity = Math.cos(angle) * velocity;
-      const yVelocity = Math.sin(angle) * velocity;
-
-      document.body.appendChild(firework);
-      this.animateFirework(firework, xVelocity, yVelocity);
-    });
-  }
-
-  static animateFirework(element, xVelocity, yVelocity) {
-    let opacity = 1;
-    let scale = 1;
-
-    const animate = () => {
-      element.style.transform = `translate(${xVelocity * scale}px, ${yVelocity * scale}px) scale(${scale})`;
-      element.style.opacity = opacity;
-
-      opacity -= 0.02;
-      scale += 0.05;
-
-      if (opacity > 0) {
-        requestAnimationFrame(animate);
-      } else {
-        element.remove();
-      }
-    };
-
-    requestAnimationFrame(animate);
-  }
-
-  static createFlowersAndHearts() {
-    const container = document.createElement('div');
-    container.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 999;
-    `;
-
-    const createEmoji = (emoji) => {
-      const element = document.createElement('div');
-      element.className = 'floating-emoji';
-      element.textContent = emoji;
-      element.style.cssText = `
-        left: ${Math.random() * 100}vw;
-        animation-duration: ${3 + Math.random() * 4}s;
-        animation-delay: ${Math.random() * 2}s;
-        transform: scale(${0.5 + Math.random() * 0.5});
-      `;
-      return element;
-    };
-
-    // Create flowers
-    Array.from({ length: CONSTANTS.FLOWER_COUNT }).forEach(() => {
-      const flower = createEmoji(
-        CONSTANTS.EMOJIS.FLOWERS[Math.floor(Math.random() * CONSTANTS.EMOJIS.FLOWERS.length)]
-      );
-      container.appendChild(flower);
-    });
-
-    // Create hearts
-    Array.from({ length: CONSTANTS.HEART_COUNT }).forEach(() => {
-      const heart = createEmoji(
-        CONSTANTS.EMOJIS.HEARTS[Math.floor(Math.random() * CONSTANTS.EMOJIS.HEARTS.length)]
-      );
-      container.appendChild(heart);
-    });
-
-    document.body.appendChild(container);
-    return container;
-  }
+// Flower and Heart effect function
+function createFlowersAndHearts(x, y) {
+    const flowers = ['🌸', '🌺', '🌹', '🌷', '💐'];
+    const hearts = ['❤️', '💖', '💝', '💕', '💓'];
+    
+    for (let i = 0; i < 3; i++) {
+        // Create flower
+        const flower = document.createElement('div');
+        flower.className = 'flower';
+        flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+        flower.style.left = x + 'px';
+        flower.style.top = y + 'px';
+        
+        // Random end position
+        const endX = (Math.random() - 0.5) * 200;
+        const endY = -Math.random() * 300;
+        flower.style.setProperty('--end-x', `${endX}px`);
+        flower.style.setProperty('--end-y', `${endY}px`);
+        
+        document.body.appendChild(flower);
+        
+        // Create heart
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = (x + Math.random() * 50) + 'px';
+        heart.style.top = (y + Math.random() * 50) + 'px';
+        
+        // Random end position for heart
+        const heartEndX = (Math.random() - 0.5) * 200;
+        const heartEndY = -Math.random() * 300;
+        heart.style.setProperty('--end-x', `${heartEndX}px`);
+        heart.style.setProperty('--end-y', `${heartEndY}px`);
+        
+        document.body.appendChild(heart);
+        
+        // Remove elements after animation
+        setTimeout(() => {
+            flower.remove();
+            heart.remove();
+        }, 6000);
+    }
 }
 
-// Modal Manager
-class ModalManager {
-  static showMessage(message, onClose) {
-    const modal = this.createModal(message);
-    document.body.appendChild(modal);
+// Yes button click handler
+yesBtn.addEventListener("click", () => {
+    question.innerHTML = "You don't know how happy hadi will be";
+    gif.innerHTML = '<iframe src="https://giphy.com/embed/jL8Pnjy66JYVa" width="480" height="269" style="width:100%;height:auto;" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/disney-jL8Pnjy66JYVa">via GIPHY</a></p>';
+    messageContainer.style.display = "block";
+    
+    // Create flowers and hearts at regular intervals
+    const intervalId = setInterval(() => {
+        createFlowersAndHearts(
+            Math.random() * window.innerWidth,
+            Math.random() * window.innerHeight
+        );
+    }, 300);
+    
+    // Stop effects after 5 seconds
+    setTimeout(() => {
+        clearInterval(intervalId);
+    }, 5000);
+    
+    setTimeout(() => {
+        messageContainer.classList.add("visible");
+    }, 10);
+    
+    yesBtn.style.display = "none";
+    noBtn.style.display = "none";
+});
 
-    requestAnimationFrame(() => modal.classList.add('visible'));
+// Message button click handler
+messageBtn.addEventListener("click", () => {
+    showSpecialMessage();
+});
 
-    const closeBtn = modal.querySelector('.modal-close-btn');
-    closeBtn.addEventListener('click', () => {
-      modal.classList.remove('visible');
-      setTimeout(() => {
-        modal.remove();
-        if (onClose) onClose();
-      }, 300);
-    });
-  }
-
-  static createModal(messageContent) {
-    const container = document.createElement('div');
-    container.className = 'modal-container';
-    container.innerHTML = `
-      <div class="modal-content">
-        <div class="message-text">
-          ${messageContent}
-          <div class="contact-info">
-            Please message me on WhatsApp:<br>
-            <a href="tel:${CONSTANTS.MESSAGES.PHONE}">${CONSTANTS.MESSAGES.PHONE}</a>
-          </div>
+function showSpecialMessage() {
+    const modalContainer = document.createElement('div');
+    modalContainer.className = 'modal-container';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    
+    modalContent.innerHTML = `
+        <div class="message-text" style="line-height: 1.8; margin-bottom: 25px; text-align: left;">
+            I Know you are tired both physically and mentally and i know i just keep making everything worse for you, im sorry im sorry for being like this i try to change but that
+            im failing yusra, i dont know what to do im afraid that im not making this any better, i dont want to lose you i dont want you to go, im afraid one day you will stop,
+            im afraid kuch farq nhi paray ga yusra ko, YUSRA PLEASE COME BACK AND PLEASE COMMUNICATE, YOU ARE NOT BURI, YOU ARE NOT AN ASSHOLE, I AM THE ASSHOLE FOR NOT APPRECIATING YOU,
+            <br><br>
+            PLEASE ILL DO EVERYTHING TO MAKE THIS RIGHT, YUSRA I LOVE YOU AND YOU ARE LITERALLY EVERYTHING THAT IS GOOD IN MY LIFE AND I DONT WANT TO LOSE MY ONLY YUSRA MY ONLY REASON THAT MAKES ME WANT TO BE HAPPY 
+            <br><br>
+            YOU ARE A PART OF ME AND EVERYTHING THAT MAKES HADI HADI, WITHOUT YOU IM JUST A JAHIL SERAIKI, YOU MAKE ME HAPPY AND YOU COMPLETE MY LIFE AND AND YUSRA AS MUCH AS I MISS YOU AND LOVE YOU EVERY SECOND, I WILL NOT MAKE IT ANYMORE EXHAUSTING, SO PLEASE COME BACK TO THE YUSRA THAT HAS SO MANY PERSONALITIES AND EACH ONE IS SOMETHING I LOVE MORE THAN EVERYTHING IN THE WORLD
+            <br><br>
+            <div style="text-align: center; margin-top: 15px; font-weight: bold; color: #e94d58;">
+                Please message me on WhatsApp:<br>
+                <a href="tel:+971567811986" style="color: #e94d58; text-decoration: none;">+971 567 811 986</a>
+            </div>
         </div>
         <button class="modal-close-btn">Close</button>
-      </div>
     `;
-    return container;
-  }
+    
+    const modalStyles = `
+        <style>
+            .modal-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                padding: 20px;
+            }
+            .modal-content {
+                background: white;
+                padding: 2.5rem;
+                border-radius: 15px;
+                max-width: 600px;
+                width: 100%;
+                max-height: 90vh;
+                overflow-y: auto;
+                transform: translateY(20px);
+                transition: transform 0.3s ease;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            }
+            .modal-container.visible {
+                opacity: 1;
+            }
+            .modal-container.visible .modal-content {
+                transform: translateY(0);
+            }
+            .message-text {
+                font-size: 1.1em;
+                color: #333;
+            }
+            .modal-close-btn {
+                background: #e94d58;
+                color: white;
+                padding: 12px 30px;
+                border: none;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 1.1em;
+                transition: all 0.3s ease;
+                margin-top: 20px;
+            }
+            .modal-close-btn:hover {
+                background: #d43d47;
+                transform: translateY(-2px);
+            }
+            @media (max-width: 600px) {
+                .modal-content {
+                    padding: 1.5rem;
+                }
+                .message-text {
+                    font-size: 1em;
+                }
+            }
+        </style>
+    `;
+    
+    document.head.insertAdjacentHTML('beforeend', modalStyles);
+    modalContainer.appendChild(modalContent);
+    document.body.appendChild(modalContainer);
+    
+    setTimeout(() => {
+        modalContainer.classList.add('visible');
+    }, 10);
+    
+    const closeBtn = modalContent.querySelector('.modal-close-btn');
+    closeBtn.addEventListener('click', () => {
+        modalContainer.classList.remove('visible');
+        setTimeout(() => {
+            modalContainer.remove();
+        }, 300);
+    });
 }
 
-// Event Handlers
-function handleYesClick() {
-  elements.question.innerHTML = CONSTANTS.MESSAGES.SUCCESS;
-  elements.gif.innerHTML = '<iframe src="https://giphy.com/embed/jL8Pnjy66JYVa" width="480" height="269" style="" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/disney-jL8Pnjy66JYVa">via GIPHY</a></p>';
-  
-  elements.messageContainer.style.display = "block";
-  elements.yesBtn.style.display = "none";
-  elements.noBtn.style.display = "none";
+// No button hover handler
+noBtn.addEventListener("mouseover", () => {
+    const noBtnRect = noBtn.getBoundingClientRect();
+    const maxX = window.innerWidth - noBtnRect.width;
+    const maxY = window.innerHeight - noBtnRect.height;
+    
+    const randomX = Math.floor(Math.random() * maxX);
+    const randomY = Math.floor(Math.random() * maxY);
+    
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+});
 
-  const fireworkInterval = setInterval(() => {
-    EffectsManager.createFirework(
-      Math.random() * window.innerWidth,
-      Math.random() * window.innerHeight
-    );
-  }, CONSTANTS.FIREWORK_INTERVAL);
-
-  setTimeout(() => {
-    clearInterval(fireworkInterval);
-  }, CONSTANTS.ANIMATION_DURATION);
-
-  setTimeout(() => {
-    elements.messageContainer.classList.add("visible");
-  }, 10);
-}
-
-function handleNoButtonHover(event) {
-  const btn = event.target;
-  const maxX = window.innerWidth - btn.offsetWidth;
-  const maxY = window.innerHeight - btn.offsetHeight;
-
-  btn.style.position = 'fixed';
-  btn.style.left = Math.floor(Math.random() * maxX) + "px";
-  btn.style.top = Math.floor(Math.random() * maxY) + "px";
-}
-
-// Initialize
-function init() {
-  elements.init();
-  EffectsManager.init();
-
-  // Event Listeners
-  elements.yesBtn.addEventListener("click", handleYesClick);
-  elements.noBtn.addEventListener("mouseover", handleNoButtonHover);
-  elements.noBtn.addEventListener("click", (e) => e.preventDefault());
-  
-  elements.messageBtn.addEventListener("click", () => {
-    const effectsContainer = EffectsManager.createFlowersAndHearts();
-    ModalManager.showMessage(
-      `I Know you are tired both physically and mentally and i know i just keep making everything worse for you, im sorry im sorry for being like this i try to change but that
-      im failing yusra, i dont know what to do im afraid that im not making this any better, i dont want to lose you i dont want you to go, im afraid one day you will stop,
-      im afraid kuch farq nhi paray ga yusra ko, YUSRA PLEASE COME BACK AND PLEASE COMMUNICATE, YOU ARE NOT BURI, YOU ARE NOT AN ASSHOLE, I AM THE ASSHOLE FOR NOT APPRECIATING YOU,
-PLEASE ILL DO EVERYTHING TO MAKE THIS RIGHT, YUSRA I LOVE YOU AND YOU ARE LITERALLY EVERYTHING THAT IS GOOD IN MY LIFE AND I DONT WANT TO LOSE MY ONLY YUSRA MY ONLY REASON THAT MAKES ME WANT TO BE HAPPY 
-YOU ARE A PART OF ME AND EVERYTHING THAT MAKES HADI HADI, WITHOUT YOU IM JUST A JAHIL SERAIKI, YOU MAKE ME HAPPY AND YOU COMPLETE MY LIFE AND AND YUSRA AS MUCH AS I MISS YOU AND LOVE YOU EVERY SECOND, I WILL NOT MAKE IT ANYMORE EXHAUSTING, SO PLEASE COME BACK TO THE YUSRA THAT HAS SO MANY PERSONALITIES AND EACH ONE IS SOMETHING I LOVE MORE THAN EVERYTHING IN THE WORLD`, // Your full message here
-      () => effectsContainer.remove()
-    );
-  });
-}
-
-// Start the application
-document.addEventListener('DOMContentLoaded', init);
+// Prevent default click on No button
+noBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    return false;
+});
