@@ -216,7 +216,7 @@ class ModalManager {
 // Event Handlers
 function handleYesClick() {
   elements.question.innerHTML = CONSTANTS.MESSAGES.SUCCESS;
-  elements.gif.innerHTML = '<iframe src="https://giphy.com/embed/gJiwjhuYhvpUJf0YTr" width="480" height="269" style="width:100%;height:auto;" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>';
+  elements.gif.innerHTML = '<iframe src="https://giphy.com/embed/jL8Pnjy66JYVa" width="480" height="269" style="" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/disney-jL8Pnjy66JYVa">via GIPHY</a></p>';
   
   elements.messageContainer.style.display = "block";
   elements.yesBtn.style.display = "none";
