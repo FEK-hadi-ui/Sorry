@@ -113,7 +113,7 @@ function createFlowersAndHearts(x, y) {
 
 // Yes button click handler
 yesBtn.addEventListener("click", () => {
-    question.innerHTML = "You don't know how happy hadi will be";
+    question.innerHTML = "yusra :(";
     gif.innerHTML = '<iframe src="https://giphy.com/embed/jL8Pnjy66JYVa" width="480" height="269" style="width:100%;height:auto;" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/disney-jL8Pnjy66JYVa">via GIPHY</a></p>';
     messageContainer.style.display = "block";
     
