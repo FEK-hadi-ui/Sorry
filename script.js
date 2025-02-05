@@ -1,17 +1,51 @@
-// DOM Elements
-const wrapper = document.querySelector(".wrapper");
-const question = document.querySelector(".question");
-const gif = document.querySelector(".tenor-gif-embed");
-const yesBtn = document.querySelector(".yes-btn");
-const noBtn = document.querySelector(".no-btn");
-const messageContainer = document.querySelector(".message-button-container");
-const messageBtn = document.querySelector(".message-btn");
+// Constants
+const CONSTANTS = {
+  COLORS: ['#e94d58', '#ff0', '#ffa500', '#ff69b4'],
+  ANIMATION_DURATION: 5000,
+  FIREWORK_INTERVAL: 300,
+  FIREWORK_COUNT: 30,
+  FLOWER_COUNT: 50,
+  HEART_COUNT: 50,
+  MESSAGES: {
+    SUCCESS: "You don't know how happy hadi will be",
+    PHONE: '+971 567 811 986'
+  },
+  EMOJIS: {
+    FLOWERS: ['🌸', '🌺', '🌹', '🌷', '💐', '🌻'],
+    HEARTS: ['❤️', '💖', '💝', '💕', '💗', '💓']
+  }
+};
 
-// Create styles for effects
-const effectStyles = `
-    <style>
-    /* Firework styles */
-    .firework {
+// DOM Elements with error handling
+const elements = {
+  init() {
+    try {
+      this.wrapper = document.querySelector(".wrapper");
+      this.question = document.querySelector(".question");
+      this.gif = document.querySelector(".tenor-gif-embed");
+      this.yesBtn = document.querySelector(".yes-btn");
+      this.noBtn = document.querySelector(".no-btn");
+      this.messageContainer = document.querySelector(".message-button-container");
+      this.messageBtn = document.querySelector(".message-btn");
+
+      if (!this.yesBtn || !this.noBtn || !this.messageBtn) {
+        throw new Error('Required button elements not found');
+      }
+    } catch (error) {
+      console.error('Error initializing elements:', error);
+    }
+  }
+};
+
+// Effects Manager
+class EffectsManager {
+  static init() {
+    this.injectStyles();
+  }
+
+  static injectStyles() {
+    const styles = `
+      .firework {
         position: fixed;
         top: 50%;
         left: 50%;
@@ -22,273 +56,220 @@ const effectStyles = `
         border-radius: 50%;
         pointer-events: none;
         z-index: 2000;
-    }
+      }
 
-    /* Rain styles */
-    .raindrop {
+      .floating-emoji {
         position: fixed;
         pointer-events: none;
-        width: 2px;
-        height: 100px;
-        background: linear-gradient(transparent, #00f9);
+        font-size: 24px;
         z-index: 1000;
-    }
+        animation: float 6s linear infinite;
+        opacity: 0;
+      }
 
-    @keyframes fall {
+      @keyframes float {
         0% {
-            transform: translateY(-100vh);
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 1;
         }
         100% {
-            transform: translateY(100vh);
+          transform: translateY(-100px) rotate(360deg);
+          opacity: 0;
         }
-    }
+      }
 
-    @keyframes explode {
-        0% {
-            transform: translate(-50%, -50%) scale(0);
-            opacity: 1;
-        }
-        100% {
-            transform: translate(-50%, -50%) scale(30);
-            opacity: 0;
-        }
-    }
-    </style>
-`;
+      @keyframes sway {
+        0%, 100% { transform: translateX(0); }
+        50% { transform: translateX(30px); }
+      }
+    `;
 
-document.head.insertAdjacentHTML('beforeend', effectStyles);
+    const styleElement = document.createElement('style');
+    styleElement.textContent = styles;
+    document.head.appendChild(styleElement);
+  }
 
-// Firework effect function
-function createFirework(x, y) {
-    const colors = ['#e94d58', '#ff0', '#ffa500', '#ff69b4'];
-    
-    for (let i = 0; i < 30; i++) {
-        const firework = document.createElement('div');
-        firework.className = 'firework';
-        firework.style.left = x + 'px';
-        firework.style.top = y + 'px';
-        firework.style.background = colors[Math.floor(Math.random() * colors.length)];
-        firework.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
-        
-        const angle = (Math.random() * Math.PI * 2);
-        const velocity = 50 + Math.random() * 50;
-        const xVelocity = Math.cos(angle) * velocity;
-        const yVelocity = Math.sin(angle) * velocity;
-        
-        document.body.appendChild(firework);
-        
-        let opacity = 1;
-        let scale = 1;
-        
-        const animate = () => {
-            firework.style.transform = `translate(${xVelocity * scale}px, ${yVelocity * scale}px) scale(${scale})`;
-            firework.style.opacity = opacity;
-            
-            opacity -= 0.02;
-            scale += 0.05;
-            
-            if (opacity > 0) {
-                requestAnimationFrame(animate);
-            } else {
-                firework.remove();
-            }
-        };
-        
+  static createFirework(x, y) {
+    Array.from({ length: CONSTANTS.FIREWORK_COUNT }).forEach(() => {
+      const firework = document.createElement('div');
+      firework.className = 'firework';
+      firework.style.cssText = `
+        left: ${x}px;
+        top: ${y}px;
+        background: ${CONSTANTS.COLORS[Math.floor(Math.random() * CONSTANTS.COLORS.length)]};
+      `;
+
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = 50 + Math.random() * 50;
+      const xVelocity = Math.cos(angle) * velocity;
+      const yVelocity = Math.sin(angle) * velocity;
+
+      document.body.appendChild(firework);
+      this.animateFirework(firework, xVelocity, yVelocity);
+    });
+  }
+
+  static animateFirework(element, xVelocity, yVelocity) {
+    let opacity = 1;
+    let scale = 1;
+
+    const animate = () => {
+      element.style.transform = `translate(${xVelocity * scale}px, ${yVelocity * scale}px) scale(${scale})`;
+      element.style.opacity = opacity;
+
+      opacity -= 0.02;
+      scale += 0.05;
+
+      if (opacity > 0) {
         requestAnimationFrame(animate);
-    }
+      } else {
+        element.remove();
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }
+
+  static createFlowersAndHearts() {
+    const container = document.createElement('div');
+    container.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    `;
+
+    const createEmoji = (emoji) => {
+      const element = document.createElement('div');
+      element.className = 'floating-emoji';
+      element.textContent = emoji;
+      element.style.cssText = `
+        left: ${Math.random() * 100}vw;
+        animation-duration: ${3 + Math.random() * 4}s;
+        animation-delay: ${Math.random() * 2}s;
+        transform: scale(${0.5 + Math.random() * 0.5});
+      `;
+      return element;
+    };
+
+    // Create flowers
+    Array.from({ length: CONSTANTS.FLOWER_COUNT }).forEach(() => {
+      const flower = createEmoji(
+        CONSTANTS.EMOJIS.FLOWERS[Math.floor(Math.random() * CONSTANTS.EMOJIS.FLOWERS.length)]
+      );
+      container.appendChild(flower);
+    });
+
+    // Create hearts
+    Array.from({ length: CONSTANTS.HEART_COUNT }).forEach(() => {
+      const heart = createEmoji(
+        CONSTANTS.EMOJIS.HEARTS[Math.floor(Math.random() * CONSTANTS.EMOJIS.HEARTS.length)]
+      );
+      container.appendChild(heart);
+    });
+
+    document.body.appendChild(container);
+    return container;
+  }
 }
 
-// Rain effect function
-function createRain() {
-    const rainContainer = document.createElement('div');
-    rainContainer.style.position = 'fixed';
-    rainContainer.style.top = '0';
-    rainContainer.style.left = '0';
-    rainContainer.style.width = '100%';
-    rainContainer.style.height = '100%';
-    rainContainer.style.pointerEvents = 'none';
-    rainContainer.style.zIndex = '999';
-    
-    for (let i = 0; i < 100; i++) {
-        const raindrop = document.createElement('div');
-        raindrop.className = 'raindrop';
-        raindrop.style.left = Math.random() * 100 + 'vw';
-        raindrop.style.animationDuration = (Math.random() * 1 + 0.5) + 's';
-        raindrop.style.animation = 'fall linear infinite';
-        raindrop.style.opacity = Math.random() * 0.3 + 0.2;
-        rainContainer.appendChild(raindrop);
-    }
-    
-    document.body.appendChild(rainContainer);
-    
-    return rainContainer;
-}
+// Modal Manager
+class ModalManager {
+  static showMessage(message, onClose) {
+    const modal = this.createModal(message);
+    document.body.appendChild(modal);
 
-// Yes button click handler
-yesBtn.addEventListener("click", () => {
-    question.innerHTML = "You don't know how happy hadi will be";
-    gif.innerHTML = '<iframe src="https://giphy.com/embed/gJiwjhuYhvpUJf0YTr" width="480" height="269" style="width:100%;height:auto;" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/showtv-show-tv-ierde-aatay-ulusoy-gJiwjhuYhvpUJf0YTr">via GIPHY</a></p>';
-    messageContainer.style.display = "block";
-    
-    // Create multiple fireworks
-    const intervalId = setInterval(() => {
-        createFirework(
-            Math.random() * window.innerWidth,
-            Math.random() * window.innerHeight
-        );
-    }, 300);
-    
-    // Stop fireworks after 5 seconds
-    setTimeout(() => {
-        clearInterval(intervalId);
-    }, 5000);
-    
-    setTimeout(() => {
-        messageContainer.classList.add("visible");
-    }, 10);
-    
-    yesBtn.style.display = "none";
-    noBtn.style.display = "none";
-});
+    requestAnimationFrame(() => modal.classList.add('visible'));
 
-// Message button click handler
-messageBtn.addEventListener("click", () => {
-    const rainContainer = createRain();
-    showSpecialMessage();
-    
-    // Remove rain effect after modal is closed
-    const closeBtn = document.querySelector('.modal-close-btn');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            rainContainer.remove();
-        });
-    }
-});
+    const closeBtn = modal.querySelector('.modal-close-btn');
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('visible');
+      setTimeout(() => {
+        modal.remove();
+        if (onClose) onClose();
+      }, 300);
+    });
+  }
 
-function showSpecialMessage() {
-    const modalContainer = document.createElement('div');
-    modalContainer.className = 'modal-container';
-    
-    const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content';
-    
-    modalContent.innerHTML = `
-        <div class="message-text" style="line-height: 1.8; margin-bottom: 25px; text-align: left;">
-            I’m not sure if I’ll be here when you come back, and I don’t know what the future holds for my surgery or if it will be successful. But if you happen to see this, please know that I am holding onto hope for the day you return.
-            <br><br>
-            I am still looking for you, still waiting i check this website everyday and i see you everyday and and all i get are bad dreams reallyy bad  .
-            <br><br>
-            I miss you more than words can express. I promise to reignite the spark you once had and make it shine brighter than ever. You mean the world to me, and I want you to know that.
-
-You mentioned I never opened up with you, and I realize now how true that is. I was afraid that if I shared my true self, you might not like me, and I couldn’t bear the thought of losing you. But I want to change that.
-
-You said, “I’m not the girl,” but I need you to know that you are the girl. Please come back. I’m here, ready to show you just how special you are to me and how much you mean in my life.
-            <br><br>
-            <div style="text-align: center; margin-top: 15px; font-weight: bold; color: #e94d58;">
-                Please message me on WhatsApp:<br>
-                <a href="tel:+971567811986" style="color: #e94d58; text-decoration: none;">+971 567 811 986</a>
-            </div>
+  static createModal(messageContent) {
+    const container = document.createElement('div');
+    container.className = 'modal-container';
+    container.innerHTML = `
+      <div class="modal-content">
+        <div class="message-text">
+          ${messageContent}
+          <div class="contact-info">
+            Please message me on WhatsApp:<br>
+            <a href="tel:${CONSTANTS.MESSAGES.PHONE}">${CONSTANTS.MESSAGES.PHONE}</a>
+          </div>
         </div>
         <button class="modal-close-btn">Close</button>
+      </div>
     `;
-    
-    const modalStyles = `
-        <style>
-            .modal-container {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.8);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 1000;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-                padding: 20px;
-            }
-            .modal-content {
-                background: white;
-                padding: 2.5rem;
-                border-radius: 15px;
-                max-width: 600px;
-                width: 100%;
-                max-height: 90vh;
-                overflow-y: auto;
-                transform: translateY(20px);
-                transition: transform 0.3s ease;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            }
-            .modal-container.visible {
-                opacity: 1;
-            }
-            .modal-container.visible .modal-content {
-                transform: translateY(0);
-            }
-            .message-text {
-                font-size: 1.1em;
-                color: #333;
-            }
-            .modal-close-btn {
-                background: #e94d58;
-                color: white;
-                padding: 12px 30px;
-                border: none;
-                border-radius: 25px;
-                cursor: pointer;
-                font-size: 1.1em;
-                transition: all 0.3s ease;
-                margin-top: 20px;
-            }
-            .modal-close-btn:hover {
-                background: #d43d47;
-                transform: translateY(-2px);
-            }
-            @media (max-width: 600px) {
-                .modal-content {
-                    padding: 1.5rem;
-                }
-                .message-text {
-                    font-size: 1em;
-                }
-            }
-        </style>
-    `;
-    
-    document.head.insertAdjacentHTML('beforeend', modalStyles);
-    modalContainer.appendChild(modalContent);
-    document.body.appendChild(modalContainer);
-    
-    setTimeout(() => {
-        modalContainer.classList.add('visible');
-    }, 10);
-    
-    const closeBtn = modalContent.querySelector('.modal-close-btn');
-    closeBtn.addEventListener('click', () => {
-        modalContainer.classList.remove('visible');
-        setTimeout(() => {
-            modalContainer.remove();
-        }, 300);
-    });
+    return container;
+  }
 }
 
-// No button hover handler
-noBtn.addEventListener("mouseover", () => {
-    const noBtnRect = noBtn.getBoundingClientRect();
-    const maxX = window.innerWidth - noBtnRect.width;
-    const maxY = window.innerHeight - noBtnRect.height;
-    
-    const randomX = Math.floor(Math.random() * maxX);
-    const randomY = Math.floor(Math.random() * maxY);
-    
-    noBtn.style.left = randomX + "px";
-    noBtn.style.top = randomY + "px";
-});
+// Event Handlers
+function handleYesClick() {
+  elements.question.innerHTML = CONSTANTS.MESSAGES.SUCCESS;
+  elements.gif.innerHTML = '<iframe src="https://giphy.com/embed/gJiwjhuYhvpUJf0YTr" width="480" height="269" style="width:100%;height:auto;" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>';
+  
+  elements.messageContainer.style.display = "block";
+  elements.yesBtn.style.display = "none";
+  elements.noBtn.style.display = "none";
 
-// Prevent default click on No button
-noBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    return false;
-});
+  const fireworkInterval = setInterval(() => {
+    EffectsManager.createFirework(
+      Math.random() * window.innerWidth,
+      Math.random() * window.innerHeight
+    );
+  }, CONSTANTS.FIREWORK_INTERVAL);
+
+  setTimeout(() => {
+    clearInterval(fireworkInterval);
+  }, CONSTANTS.ANIMATION_DURATION);
+
+  setTimeout(() => {
+    elements.messageContainer.classList.add("visible");
+  }, 10);
+}
+
+function handleNoButtonHover(event) {
+  const btn = event.target;
+  const maxX = window.innerWidth - btn.offsetWidth;
+  const maxY = window.innerHeight - btn.offsetHeight;
+
+  btn.style.position = 'fixed';
+  btn.style.left = Math.floor(Math.random() * maxX) + "px";
+  btn.style.top = Math.floor(Math.random() * maxY) + "px";
+}
+
+// Initialize
+function init() {
+  elements.init();
+  EffectsManager.init();
+
+  // Event Listeners
+  elements.yesBtn.addEventListener("click", handleYesClick);
+  elements.noBtn.addEventListener("mouseover", handleNoButtonHover);
+  elements.noBtn.addEventListener("click", (e) => e.preventDefault());
+  
+  elements.messageBtn.addEventListener("click", () => {
+    const effectsContainer = EffectsManager.createFlowersAndHearts();
+    ModalManager.showMessage(
+      `I Know you are tired both physically and mentally and i know i just keep making everything worse for you, im sorry im sorry for being like this i try to change but that
+      im failing yusra, i dont know what to do im afraid that im not making this any better, i dont want to lose you i dont want you to go, im afraid one day you will stop,
+      im afraid kuch farq nhi paray ga yusra ko, YUSRA PLEASE COME BACK AND PLEASE COMMUNICATE, YOU ARE NOT BURI, YOU ARE NOT AN ASSHOLE, I AM THE ASSHOLE FOR NOT APPRECIATING YOU,
+PLEASE ILL DO EVERYTHING TO MAKE THIS RIGHT, YUSRA I LOVE YOU AND YOU ARE LITERALLY EVERYTHING THAT IS GOOD IN MY LIFE AND I DONT WANT TO LOSE MY ONLY YUSRA MY ONLY REASON THAT MAKES ME WANT TO BE HAPPY 
+YOU ARE A PART OF ME AND EVERYTHING THAT MAKES HADI HADI, WITHOUT YOU IM JUST A JAHIL SERAIKI, YOU MAKE ME HAPPY AND YOU COMPLETE MY LIFE AND AND YUSRA AS MUCH AS I MISS YOU AND LOVE YOU EVERY SECOND, I WILL NOT MAKE IT ANYMORE EXHAUSTING, SO PLEASE COME BACK TO THE YUSRA THAT HAS SO MANY PERSONALITIES AND EACH ONE IS SOMETHING I LOVE MORE THAN EVERYTHING IN THE WORLD`, // Your full message here
+      () => effectsContainer.remove()
+    );
+  });
+}
+
+// Start the application
+document.addEventListener('DOMContentLoaded', init);
