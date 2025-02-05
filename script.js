@@ -160,6 +160,8 @@ function showSpecialMessage() {
             <br><br>
             YOU ARE A PART OF ME AND EVERYTHING THAT MAKES HADI HADI, WITHOUT YOU IM JUST A JAHIL SERAIKI, YOU MAKE ME HAPPY AND YOU COMPLETE MY LIFE AND AND YUSRA AS MUCH AS I MISS YOU AND LOVE YOU EVERY SECOND, I WILL NOT MAKE IT ANYMORE EXHAUSTING, SO PLEASE COME BACK TO THE YUSRA THAT HAS SO MANY PERSONALITIES AND EACH ONE IS SOMETHING I LOVE MORE THAN EVERYTHING IN THE WORLD
             <br><br>
+            I know i say this har dfa but please trust me on this and please help me on this :/
+            <br><br>
             <div style="text-align: center; margin-top: 15px; font-weight: bold; color: #e94d58;">
                 Please call me or message me,im dying for you:<br>
                 <a href="tel:+971567811986" style="color: #e94d58; text-decoration: none;">+971 567 811 986</a>
