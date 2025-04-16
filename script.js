@@ -6,6 +6,7 @@ const yesBtn = document.querySelector(".yes-btn");
 const noBtn = document.querySelector(".no-btn");
 const messageContainer = document.querySelector(".message-button-container");
 const messageBtn = document.querySelector(".message-btn");
+const loveAudio = document.getElementById("love-audio");
 
 // Create styles for effects
 const effectStyles = `
@@ -67,6 +68,33 @@ const effectStyles = `
 
 document.head.insertAdjacentHTML('beforeend', effectStyles);
 
+// Create firework explosion
+function createFirework(x, y) {
+    const firework = document.createElement('div');
+    firework.className = 'firework';
+    firework.style.left = x + 'px';
+    firework.style.top = y + 'px';
+    document.body.appendChild(firework);
+    
+    // Random color
+    const colors = ['#e94d58', '#f3a2a9', '#ffb6c1', '#9b6b9d', '#b4869f'];
+    firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+    
+    // Animate explosion
+    firework.animate([
+        { transform: 'translate(-50%, -50%) scale(0)', opacity: 1 },
+        { transform: 'translate(-50%, -50%) scale(30)', opacity: 0 }
+    ], {
+        duration: 1000,
+        easing: 'ease-out'
+    });
+    
+    // Remove after animation
+    setTimeout(() => {
+        firework.remove();
+    }, 1000);
+}
+
 // Flower and Heart effect function
 function createFlowersAndHearts(x, y) {
     const flowers = ['🌸', '🌺', '🌹', '🌷', '💐'];
@@ -111,6 +139,73 @@ function createFlowersAndHearts(x, y) {
     }
 }
 
+// Create sparkles effect
+function createSparkles() {
+    for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            
+            // Random position
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            
+            document.body.appendChild(sparkle);
+            
+            // Remove after animation completes
+            setTimeout(() => {
+                sparkle.remove();
+            }, 2000);
+        }, i * 200);
+    }
+}
+
+// Create butterflies
+function createButterflies() {
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            const butterfly = document.createElement('div');
+            butterfly.className = 'butterfly';
+            
+            // Random vertical position
+            const y = Math.random() * window.innerHeight * 0.7;
+            butterfly.style.top = y + 'px';
+            
+            // Random animation duration
+            const duration = 15 + Math.random() * 10;
+            butterfly.style.animationDuration = duration + 's';
+            
+            document.body.appendChild(butterfly);
+            
+            // Remove after animation
+            setTimeout(() => {
+                butterfly.remove();
+            }, duration * 1000);
+        }, i * 3000);
+    }
+}
+
+// Create glow effect
+function createGlowEffect() {
+    const glow = document.createElement('div');
+    glow.className = 'glow-effect';
+    
+    // Random position
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight;
+    glow.style.left = x + 'px';
+    glow.style.top = y + 'px';
+    
+    document.body.appendChild(glow);
+    
+    // Remove after animation cycles
+    setTimeout(() => {
+        glow.remove();
+    }, 8000);
+}
+
 // Create falling hearts animation
 function createFallingHearts() {
     const heartsContainer = document.createElement('div');
@@ -153,14 +248,44 @@ function createFallingHearts() {
     }, 8000);
 }
 
+// Play audio function
+function playLoveAudio() {
+    // If you don't have a specific file hosted, you can use the Web Speech API
+    if (!loveAudio || loveAudio.error) {
+        const utterance = new SpeechSynthesisUtterance("I love you and you make me happy");
+        utterance.rate = 0.9; // Slightly slower for calm effect
+        utterance.pitch = 1.1; // Slightly higher pitch
+        speechSynthesis.speak(utterance);
+    } else {
+        loveAudio.play().catch(e => {
+            console.log("Audio playback failed:", e);
+            // Fallback to speech synthesis if audio fails
+            const utterance = new SpeechSynthesisUtterance("I love you and you make me happy");
+            utterance.rate = 0.9;
+            utterance.pitch = 1.1;
+            speechSynthesis.speak(utterance);
+        });
+    }
+}
+
 // Yes button click handler
 yesBtn.addEventListener("click", () => {
     question.innerHTML = "yusra :(";
-    gif.innerHTML = '<iframe src="https://drive.google.com/file/d/1CMFVnBT34sHlBSRI2wbdRqcQ5llQRXHT/preview" width="100%" height="350" allow="autoplay" style="border: none; border-radius: 12px;"></iframe>';
+    
+    // Larger embedded Google Drive frame with no borders
+    gif.innerHTML = '<iframe src="https://drive.google.com/file/d/1CMFVnBT34sHlBSRI2wbdRqcQ5llQRXHT/preview" width="100%" height="100%" allow="autoplay" class="google-drive-photo"></iframe>';
+    
     messageContainer.style.display = "block";
+    
+    // Play the sound
+    playLoveAudio();
     
     // Create falling hearts
     createFallingHearts();
+    
+    // Create multiple visual effects
+    createSparkles();
+    createButterflies();
     
     // Create flowers and hearts at regular intervals
     const intervalId = setInterval(() => {
@@ -168,6 +293,19 @@ yesBtn.addEventListener("click", () => {
             Math.random() * window.innerWidth,
             Math.random() * window.innerHeight
         );
+        
+        // Random fireworks
+        if (Math.random() > 0.7) {
+            createFirework(
+                Math.random() * window.innerWidth,
+                Math.random() * window.innerHeight
+            );
+        }
+        
+        // Random glow effects
+        if (Math.random() > 0.8) {
+            createGlowEffect();
+        }
     }, 300);
     
     // Stop effects after 5 seconds
@@ -243,120 +381,4 @@ function showSpecialMessage() {
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
                 border: 1px solid rgba(155, 107, 157, 0.3);
             }
-            .modal-container.visible {
-                opacity: 1;
-            }
-            .modal-container.visible .modal-content {
-                transform: translateY(0);
-            }
-            .message-text {
-                font-size: 1.1em;
-                color: #333;
-                line-height: 1.8;
-                margin-bottom: 25px;
-                text-align: left;
-            }
-            .message-heading {
-                color: #9b6b9d;
-                font-size: 1.8em;
-                margin-bottom: 20px;
-                font-weight: normal;
-                letter-spacing: 0.5px;
-                text-align: center;
-            }
-            .message-text p {
-                margin-bottom: 15px;
-            }
-            .signature {
-                text-align: right;
-                font-style: italic;
-                margin-top: 30px;
-                font-size: 1.2em;
-            }
-            .contact-info {
-                text-align: center;
-                margin-top: 30px;
-                padding-top: 20px;
-                border-top: 1px solid rgba(155, 107, 157, 0.3);
-            }
-            .phone-link {
-                display: inline-block;
-                margin-top: 10px;
-                color: #9b6b9d;
-                font-size: 1.2em;
-                text-decoration: none;
-                font-weight: bold;
-                transition: all 0.3s ease;
-            }
-            .phone-link:hover {
-                color: #b4869f;
-                transform: scale(1.05);
-            }
-            .modal-close-btn {
-                background: #9b6b9d;
-                color: white;
-                padding: 12px 30px;
-                border: none;
-                border-radius: 25px;
-                cursor: pointer;
-                font-size: 1.1em;
-                transition: all 0.3s ease;
-                margin-top: 20px;
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            .modal-close-btn:hover {
-                background: #b4869f;
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(155, 107, 157, 0.3);
-            }
-            @media (max-width: 600px) {
-                .modal-content {
-                    padding: 1.5rem;
-                }
-                .message-text {
-                    font-size: 1em;
-                }
-                .message-heading {
-                    font-size: 1.5em;
-                }
-            }
-        </style>
-    `;
-    
-    document.head.insertAdjacentHTML('beforeend', modalStyles);
-    modalContainer.appendChild(modalContent);
-    document.body.appendChild(modalContainer);
-    
-    setTimeout(() => {
-        modalContainer.classList.add('visible');
-    }, 10);
-    
-    const closeBtn = modalContent.querySelector('.modal-close-btn');
-    closeBtn.addEventListener('click', () => {
-        modalContainer.classList.remove('visible');
-        setTimeout(() => {
-            modalContainer.remove();
-        }, 300);
-    });
-}
-
-// No button hover handler
-noBtn.addEventListener("mouseover", () => {
-    const noBtnRect = noBtn.getBoundingClientRect();
-    const maxX = window.innerWidth - noBtnRect.width;
-    const maxY = window.innerHeight - noBtnRect.height;
-    
-    const randomX = Math.floor(Math.random() * maxX);
-    const randomY = Math.floor(Math.random() * maxY);
-    
-    noBtn.style.left = randomX + "px";
-    noBtn.style.top = randomY + "px";
-});
-
-// Prevent default click on No button
-noBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    return false;
-});
+            .
