@@ -295,8 +295,8 @@ function showSpecialMessage() {
             <p>You make my world feel full. You make everything better just by being in it. And I don't just love you—I love you with every part of me that knows how to love. I love you with my words, my actions, my silence, and my chaos. My heart may be flawed, but it is entirely yours.</p>
             <p class="signature">Forever grateful, <strong>Haadi</strong></p>
             <div class="contact-info">
-                <p>Please call me or message me, I'm missing you:</p>
-                <a href="tel:+971567811986" class="phone-link">+971 567 811 986</a>
+                <p>Go On a Date with me</p>
+                <a href="tel:+923156909969" class="phone-link">+971 567 811 986</a>
             </div>
         </div>
         <button class="modal-close-btn">Close</button>
