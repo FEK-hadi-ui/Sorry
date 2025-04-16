@@ -6,7 +6,6 @@ const yesBtn = document.querySelector(".yes-btn");
 const noBtn = document.querySelector(".no-btn");
 const messageContainer = document.querySelector(".message-button-container");
 const messageBtn = document.querySelector(".message-btn");
-const loveAudio = document.getElementById("love-audio");
 
 // Create styles for effects
 const effectStyles = `
@@ -187,25 +186,6 @@ function createButterflies() {
     }
 }
 
-// Create glow effect
-function createGlowEffect() {
-    const glow = document.createElement('div');
-    glow.className = 'glow-effect';
-    
-    // Random position
-    const x = Math.random() * window.innerWidth;
-    const y = Math.random() * window.innerHeight;
-    glow.style.left = x + 'px';
-    glow.style.top = y + 'px';
-    
-    document.body.appendChild(glow);
-    
-    // Remove after animation cycles
-    setTimeout(() => {
-        glow.remove();
-    }, 8000);
-}
-
 // Create falling hearts animation
 function createFallingHearts() {
     const heartsContainer = document.createElement('div');
@@ -248,37 +228,12 @@ function createFallingHearts() {
     }, 8000);
 }
 
-// Play audio function
-function playLoveAudio() {
-    // If you don't have a specific file hosted, you can use the Web Speech API
-    if (!loveAudio || loveAudio.error) {
-        const utterance = new SpeechSynthesisUtterance("I love you and you make me happy");
-        utterance.rate = 0.9; // Slightly slower for calm effect
-        utterance.pitch = 1.1; // Slightly higher pitch
-        speechSynthesis.speak(utterance);
-    } else {
-        loveAudio.play().catch(e => {
-            console.log("Audio playback failed:", e);
-            // Fallback to speech synthesis if audio fails
-            const utterance = new SpeechSynthesisUtterance("I love you and you make me happy");
-            utterance.rate = 0.9;
-            utterance.pitch = 1.1;
-            speechSynthesis.speak(utterance);
-        });
-    }
-}
-
 // Yes button click handler
-yesBtn.addEventListener("click", () => {
+yesBtn.addEventListener("click", function() {
     question.innerHTML = "yusra :(";
     
     // Larger embedded Google Drive frame with no borders
-    gif.innerHTML = '<iframe src="https://drive.google.com/file/d/1CMFVnBT34sHlBSRI2wbdRqcQ5llQRXHT/preview" width="100%" height="100%" allow="autoplay" class="google-drive-photo"></iframe>';
-    
-    messageContainer.style.display = "block";
-    
-    // Play the sound
-    playLoveAudio();
+    gif.innerHTML = '<iframe src="https://drive.google.com/file/d/1CMFVnBT34sHlBSRI2wbdRqcQ5llQRXHT/preview" width="100%" height="100%" allow="autoplay" style="border: none; border-radius: 0; height: 70vh;" class="google-drive-photo"></iframe>';
     
     // Create falling hearts
     createFallingHearts();
@@ -301,11 +256,6 @@ yesBtn.addEventListener("click", () => {
                 Math.random() * window.innerHeight
             );
         }
-        
-        // Random glow effects
-        if (Math.random() > 0.8) {
-            createGlowEffect();
-        }
     }, 300);
     
     // Stop effects after 5 seconds
@@ -313,16 +263,19 @@ yesBtn.addEventListener("click", () => {
         clearInterval(intervalId);
     }, 5000);
     
+    // Make message button visible
+    messageContainer.style.display = "block";
     setTimeout(() => {
         messageContainer.classList.add("visible");
     }, 10);
     
+    // Hide buttons
     yesBtn.style.display = "none";
     noBtn.style.display = "none";
 });
 
 // Message button click handler
-messageBtn.addEventListener("click", () => {
+messageBtn.addEventListener("click", function() {
     showSpecialMessage();
 });
 
@@ -349,36 +302,51 @@ function showSpecialMessage() {
         <button class="modal-close-btn">Close</button>
     `;
     
-    const modalStyles = `
-        <style>
-            .modal-container {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.8);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 1000;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-                padding: 20px;
-            }
-            .modal-content {
-                background: white;
-                background-image: linear-gradient(to bottom, rgba(255,255,255,0.97), rgba(255,255,255,0.97)), 
-                                  url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50c-5.523 0-10-4.477-10-10s4.477-10 10-10 10 4.477 10 10-4.477 10-10 10zm0-15c-2.761 0-5 2.239-5 5s2.239 5 5 5 5-2.239 5-5-2.239-5-5-5z' fill='%23f3d8e6' fill-opacity='0.4'/%3E%3C/svg%3E");
-                padding: 2.5rem;
-                border-radius: 15px;
-                max-width: 600px;
-                width: 100%;
-                max-height: 90vh;
-                overflow-y: auto;
-                transform: translateY(20px);
-                transition: transform 0.3s ease;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-                border: 1px solid rgba(155, 107, 157, 0.3);
-            }
-            .
+    document.body.appendChild(modalContainer);
+    modalContainer.appendChild(modalContent);
+    
+    setTimeout(() => {
+        modalContainer.classList.add('visible');
+    }, 10);
+    
+    const closeBtn = modalContent.querySelector('.modal-close-btn');
+    closeBtn.addEventListener('click', () => {
+        modalContainer.classList.remove('visible');
+        setTimeout(() => {
+            modalContainer.remove();
+        }, 300);
+    });
+}
+
+// No button hover handler - make it move away when hovered
+noBtn.addEventListener("mouseover", function() {
+    const noBtnRect = noBtn.getBoundingClientRect();
+    const maxX = window.innerWidth - noBtnRect.width;
+    const maxY = window.innerHeight - noBtnRect.height;
+    
+    const randomX = Math.floor(Math.random() * maxX);
+    const randomY = Math.floor(Math.random() * maxY);
+    
+    noBtn.style.position = "fixed";
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+});
+
+// Prevent default click on No button
+noBtn.addEventListener("click", function(e) {
+    e.preventDefault();
+    
+    // Make the button move anyway
+    const noBtnRect = noBtn.getBoundingClientRect();
+    const maxX = window.innerWidth - noBtnRect.width;
+    const maxY = window.innerHeight - noBtnRect.height;
+    
+    const randomX = Math.floor(Math.random() * maxX);
+    const randomY = Math.floor(Math.random() * maxY);
+    
+    noBtn.style.position = "fixed";
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+    
+    return false;
+});
