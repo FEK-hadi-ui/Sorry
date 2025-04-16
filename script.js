@@ -111,11 +111,56 @@ function createFlowersAndHearts(x, y) {
     }
 }
 
+// Create falling hearts animation
+function createFallingHearts() {
+    const heartsContainer = document.createElement('div');
+    heartsContainer.className = 'falling-hearts-container';
+    document.body.appendChild(heartsContainer);
+    
+    // Create hearts
+    for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'falling-heart';
+            heart.innerHTML = '❤️';
+            
+            // Random position
+            const startPositionX = Math.random() * window.innerWidth;
+            heart.style.left = startPositionX + 'px';
+            heart.style.top = '-50px';
+            
+            // Random size
+            const size = Math.random() * 20 + 10;
+            heart.style.fontSize = size + 'px';
+            
+            // Random animation duration
+            const duration = Math.random() * 3 + 3;
+            heart.style.animationDuration = duration + 's';
+            
+            // Add to container
+            heartsContainer.appendChild(heart);
+            
+            // Remove heart after animation
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }, i * 100);
+    }
+    
+    // Remove container after all hearts are done
+    setTimeout(() => {
+        heartsContainer.remove();
+    }, 8000);
+}
+
 // Yes button click handler
 yesBtn.addEventListener("click", () => {
     question.innerHTML = "yusra :(";
-    gif.innerHTML = '<iframe src="https://giphy.com/embed/jL8Pnjy66JYVa" width="480" height="269" style="width:100%;height:auto;" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/disney-jL8Pnjy66JYVa">via GIPHY</a></p>';
+    gif.innerHTML = '<iframe src="https://drive.google.com/file/d/1CMFVnBT34sHlBSRI2wbdRqcQ5llQRXHT/preview" width="100%" height="350" allow="autoplay" style="border: none; border-radius: 12px;"></iframe>';
     messageContainer.style.display = "block";
+    
+    // Create falling hearts
+    createFallingHearts();
     
     // Create flowers and hearts at regular intervals
     const intervalId = setInterval(() => {
@@ -151,20 +196,16 @@ function showSpecialMessage() {
     modalContent.className = 'modal-content';
     
     modalContent.innerHTML = `
-        <div class="message-text" style="line-height: 1.8; margin-bottom: 25px; text-align: left;">
-            I Know you are tired both physically and mentally and i know i just keep making everything worse for you, im sorry im sorry for being like this i try to change but that
-            im failing yusra, i dont know what to do im afraid that im not making this any better, i dont want to lose you i dont want you to go, im afraid one day you will stop,
-            im afraid kuch farq nhi paray ga yusra ko, YUSRA PLEASE COME BACK AND PLEASE COMMUNICATE, YOU ARE NOT BURI, YOU ARE NOT AN ASSHOLE, I AM THE ASSHOLE FOR NOT APPRECIATING YOU,
-            <br><br>
-            PLEASE ILL DO EVERYTHING TO MAKE THIS RIGHT, YUSRA I LOVE YOU AND YOU ARE LITERALLY EVERYTHING THAT IS GOOD IN MY LIFE AND I DONT WANT TO LOSE MY ONLY YUSRA MY ONLY REASON THAT MAKES ME WANT TO BE HAPPY 
-            <br><br>
-            YOU ARE A PART OF ME AND EVERYTHING THAT MAKES HADI HADI, WITHOUT YOU IM JUST A JAHIL SERAIKI, YOU MAKE ME HAPPY AND YOU COMPLETE MY LIFE AND AND YUSRA AS MUCH AS I MISS YOU AND LOVE YOU EVERY SECOND, I WILL NOT MAKE IT ANYMORE EXHAUSTING, SO PLEASE COME BACK TO THE YUSRA THAT HAS SO MANY PERSONALITIES AND EACH ONE IS SOMETHING I LOVE MORE THAN EVERYTHING IN THE WORLD
-            <br><br>
-            I know i say this har dfa but please trust me on this and please help me on this :/
-            <br><br>
-            <div style="text-align: center; margin-top: 15px; font-weight: bold; color: #e94d58;">
-                Please call me or message me,im dying for you:<br>
-                <a href="tel:+971567811986" style="color: #e94d58; text-decoration: none;">+971 567 811 986</a>
+        <div class="message-text">
+            <h2 class="message-heading">My dearest Yusra,</h2>
+            <p>I wanted to write you this letter to tell you something simple, yet something that feels too big for words—I am so incredibly lucky to have you in my life.</p>
+            <p>From the way you talk to the way you care, from your strength to your softness, you've become a part of me I never want to be without. I know I've caused problems, I've said the wrong things, acted the wrong way, and made you feel things you didn't deserve to feel. For all of that, I am truly sorry. If I could take away every moment that hurt you and replace it with nothing but love and warmth, I would do it in a heartbeat.</p>
+            <p>But even through the worst of it, you've stayed. You've cared. You've been there in ways that not everyone would be. That means more to me than I'll ever be able to express. Thank you—thank you for being in my life, for being patient with me, for being someone I can fight for, grow with, and hold close forever.</p>
+            <p>You make my world feel full. You make everything better just by being in it. And I don't just love you—I love you with every part of me that knows how to love. I love you with my words, my actions, my silence, and my chaos. My heart may be flawed, but it is entirely yours.</p>
+            <p class="signature">Forever grateful, <strong>Haadi</strong></p>
+            <div class="contact-info">
+                <p>Please call me or message me, I'm missing you:</p>
+                <a href="tel:+971567811986" class="phone-link">+971 567 811 986</a>
             </div>
         </div>
         <button class="modal-close-btn">Close</button>
@@ -189,6 +230,8 @@ function showSpecialMessage() {
             }
             .modal-content {
                 background: white;
+                background-image: linear-gradient(to bottom, rgba(255,255,255,0.97), rgba(255,255,255,0.97)), 
+                                  url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50c-5.523 0-10-4.477-10-10s4.477-10 10-10 10 4.477 10 10-4.477 10-10 10zm0-15c-2.761 0-5 2.239-5 5s2.239 5 5 5 5-2.239 5-5-2.239-5-5-5z' fill='%23f3d8e6' fill-opacity='0.4'/%3E%3C/svg%3E");
                 padding: 2.5rem;
                 border-radius: 15px;
                 max-width: 600px;
@@ -198,6 +241,7 @@ function showSpecialMessage() {
                 transform: translateY(20px);
                 transition: transform 0.3s ease;
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                border: 1px solid rgba(155, 107, 157, 0.3);
             }
             .modal-container.visible {
                 opacity: 1;
@@ -208,9 +252,48 @@ function showSpecialMessage() {
             .message-text {
                 font-size: 1.1em;
                 color: #333;
+                line-height: 1.8;
+                margin-bottom: 25px;
+                text-align: left;
+            }
+            .message-heading {
+                color: #9b6b9d;
+                font-size: 1.8em;
+                margin-bottom: 20px;
+                font-weight: normal;
+                letter-spacing: 0.5px;
+                text-align: center;
+            }
+            .message-text p {
+                margin-bottom: 15px;
+            }
+            .signature {
+                text-align: right;
+                font-style: italic;
+                margin-top: 30px;
+                font-size: 1.2em;
+            }
+            .contact-info {
+                text-align: center;
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid rgba(155, 107, 157, 0.3);
+            }
+            .phone-link {
+                display: inline-block;
+                margin-top: 10px;
+                color: #9b6b9d;
+                font-size: 1.2em;
+                text-decoration: none;
+                font-weight: bold;
+                transition: all 0.3s ease;
+            }
+            .phone-link:hover {
+                color: #b4869f;
+                transform: scale(1.05);
             }
             .modal-close-btn {
-                background: #e94d58;
+                background: #9b6b9d;
                 color: white;
                 padding: 12px 30px;
                 border: none;
@@ -219,10 +302,14 @@ function showSpecialMessage() {
                 font-size: 1.1em;
                 transition: all 0.3s ease;
                 margin-top: 20px;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
             }
             .modal-close-btn:hover {
-                background: #d43d47;
+                background: #b4869f;
                 transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(155, 107, 157, 0.3);
             }
             @media (max-width: 600px) {
                 .modal-content {
@@ -230,6 +317,9 @@ function showSpecialMessage() {
                 }
                 .message-text {
                     font-size: 1em;
+                }
+                .message-heading {
+                    font-size: 1.5em;
                 }
             }
         </style>
