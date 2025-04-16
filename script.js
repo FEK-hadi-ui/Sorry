@@ -230,7 +230,7 @@ function createFallingHearts() {
 
 // Yes button click handler
 yesBtn.addEventListener("click", function() {
-    question.innerHTML = "yusra :(";
+    question.innerHTML = "MERI JAAN";
     
     // Larger embedded Google Drive frame with no borders
     gif.innerHTML = '<iframe src="https://drive.google.com/file/d/1CMFVnBT34sHlBSRI2wbdRqcQ5llQRXHT/preview" width="100%" height="100%" allow="autoplay" style="border: none; border-radius: 0; height: 70vh;" class="google-drive-photo"></iframe>';
