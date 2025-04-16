@@ -296,7 +296,7 @@ function showSpecialMessage() {
             <p class="signature">Forever grateful, <strong>Haadi</strong></p>
             <div class="contact-info">
                 <p>Go On a Date with me</p>
-                <a href="tel:+923156909969" class="phone-link">+971 567 811 986</a>
+                <a href="tel:+923156909969" class="phone-link">+92 315 690 9969 </a>
             </div>
         </div>
         <button class="modal-close-btn">Close</button>
